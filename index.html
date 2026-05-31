@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>心动挑战 💕</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: linear-gradient(135deg, #fce4ec, #f8bbd0, #f48fb1);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .container {
+    text-align: center;
+    padding: 20px;
+    max-width: 420px;
+    width: 90%;
+  }
+  h1 {
+    font-size: 2em;
+    color: #c2185b;
+    margin-bottom: 10px;
+  }
+  .subtitle { color: #ad1457; font-size: 0.95em; margin-bottom: 30px; }
+  .card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 30px;
+    box-shadow: 0 10px 30px rgba(194,24,91,0.2);
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.4s ease;
+  }
+  .card.flip { transform: rotateY(180deg); }
+  .card-content { font-size: 1.3em; color: #333; line-height: 1.8; min-height: 80px; }
+  .tag {
+    display: inline-block;
+    padding: 4px 16px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+  .tag-truth { background: #fce4ec; color: #c2185b; }
+  .tag-dare { background: #e8f5e9; color: #2e7d32; }
+  .tag-sweet { background: #fff3e0; color: #e65100; }
+  .btn {
+    margin-top: 25px;
+    padding: 14px 40px;
+    border: none;
+    border-radius: 30px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: bold;
+  }
+  .btn-main { background: linear-gradient(135deg, #ec407a, #c2185b); color: white; }
+  .btn-main:hover { transform: scale(1.05); box-shadow: 0 5px 20px rgba(194,24,91,0.4); }
+  .btn-main:active { transform: scale(0.98); }
+  .footer { margin-top: 20px; color: #ad1457; font-size: 0.85em; }
+  .hearts { font-size: 1.5em; animation: pulse 1.5s infinite; }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>💕 心动挑战 💕</h1>
+  <p class="subtitle">敢不敢玩？点一下就知道～</p>
+
+  <div class="card" id="card">
+    <span class="tag" id="tag"></span>
+    <div class="card-content" id="content">点下面的按钮开始 👇</div>
+  </div>
+
+  <button class="btn btn-main" onclick="draw()">🎲 来一题！</button>
+
+  <p class="footer">
+    <span class="hearts">♥</span> 仅限你和TA之间的小秘密 <span class="hearts">♥</span>
+  </p>
+</div>
+
+<script>
+const data = {
+  truth: [
+    "你第一次见我的时候，心里在想什么？",
+    "你手机里有没有偷偷存我的照片？",
+    "如果我现在消失一天，你会怎么找我？",
+    "你觉得我最吸引你的地方是哪里？",
+    "你有没有在朋友面前提过我？怎么说的？",
+    "你最近一次想到我是什么时候？在干嘛？",
+    "如果可以和我做一件事，你最想做什么？",
+    "你觉得我们现在算什么关系？",
+    "你有没有因为我而心跳加速过？什么时候？",
+    "你会给我们的关系打几分？为什么？",
+    "你有没有梦到过我？梦到了什么？",
+    "你最想对我说但一直没说出口的话是什么？",
+  ],
+  dare: [
+    "给我发一条语音，说一句你最想对我说的话 🎙️",
+    "用我的名字发一条朋友圈，不许删，保留24小时 📱",
+    "现在给我打一个电话，不许挂，聊满1分钟 📞",
+    "对我说三个字，不能是'我爱你' 😏",
+    "给我发一张你现在的自拍，不许美颜 🤳",
+    "用最撒娇的语气叫我一声 🫣",
+    "给我唱一句歌，什么歌都行 🎵",
+    "发一个红包，金额随你心意 💰",
+    "把我的备注改成你最想叫我的名字 ✏️",
+    "跟我说一句土味情话，要原创的 😂",
+  ],
+  sweet: [
+    "今天的晚风很甜，因为我在想你 🌙",
+    "遇见你之后，我的心就没正经过 💓",
+    "你知道你和星星的区别吗？星星在天上，你在我心上 ⭐",
+    "我怀疑你的本质是一本书，不然为什么让我越看越想睡（在你身边）📖",
+    "你今天特别好看，但明天会更好看，因为明天我还在 👀",
+    "我这个人不太懂爱情，但遇到你之后我想学一学 📚",
+  ]
+};
+
+let currentType = '';
+
+function draw() {
+  const types = ['truth', 'dare', 'sweet'];
+  const type = types[Math.floor(Math.random() * types.length)];
+  const list = data[type];
+  const text = list[Math.floor(Math.random() * list.length)];
+
+  currentType = type;
+
+  const card = document.getElementById('card');
+  const tag = document.getElementById('tag');
+  const content = document.getElementById('content');
+
+  // 翻转动画
+  card.classList.add('flip');
+
+  setTimeout(() => {
+    if (type === 'truth') {
+      tag.textContent = '💬 真心话';
+      tag.className = 'tag tag-truth';
+    } else if (type === 'dare') {
+      tag.textContent = '🔥 大冒险';
+      tag.className = 'tag tag-dare';
+    } else {
+      tag.textContent = '🍬 甜蜜暴击';
+      tag.className = 'tag tag-sweet';
+    }
+    content.textContent = text;
+    card.classList.remove('flip');
+  }, 200);
+}
+</script>
+</body>
+</html>
